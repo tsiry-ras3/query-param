@@ -13,10 +13,13 @@ import java.util.stream.Collectors;
 @RestController
 public class QueryParamControler {
     @GetMapping("/welcome")
-    @ResponseBody
-    public String welcome(@RequestParam String name) {
-        return "welcome " + name;
+    public ResponseEntity<String> welcome(@RequestParam String name){
+        if(name.isEmpty()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad Request");
+        }
+        return ResponseEntity.ok("welcome " + name);
     }
+
 
     @Autowired
     private SaveStudent saveStudent;
