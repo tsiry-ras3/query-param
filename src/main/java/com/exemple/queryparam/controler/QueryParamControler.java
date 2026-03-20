@@ -25,10 +25,13 @@ public class QueryParamControler {
     private SaveStudent saveStudent;
 
     @PostMapping("/students")
-    @ResponseStatus(HttpStatus.CREATED)
-    public List<Student> students(@RequestBody List<Student> students) {
+    public ResponseEntity<List<Student>> students(@RequestBody List<Student> students) {
+        try {
         saveStudent.addStudents(students);
-        return saveStudent.getStudentSaved();
+        return ResponseEntity.status(HttpStatus.CREATED).body(students);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/students")
