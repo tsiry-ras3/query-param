@@ -17,7 +17,7 @@ public class SaveStudent {
         return studentStorage;
     }
 
-    public void addStudents(List<Student> students) {
+    public List<Student> addStudents(List<Student> students) {
         studentStorage.addAll(students);
-    }
+        return studentStorage;    }
 }
