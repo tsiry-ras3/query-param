@@ -6,11 +6,10 @@ import com.exemple.queryparam.validator.StudentValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @AllArgsConstructor
 @RestController
 public class StudentController {
@@ -21,7 +20,7 @@ public class StudentController {
     @PostMapping("/students")
     public ResponseEntity<?> createStudents(@RequestBody List<Student> newStudents) {
         try {
-            if (studentValidator.validStudents(newStudents) == "ok"){
+            if (studentValidator.validStudents(newStudents).equals("ok")) {
                 saveStudent.addStudents(newStudents);
                 return ResponseEntity
                         .status(HttpStatus.CREATED)
@@ -38,5 +37,28 @@ public class StudentController {
                     .header("Content-Type", "text/plain")
                     .body(e.getMessage());
         }
+    }
+
+    @GetMapping("/students")
+    public ResponseEntity<?> getStudents(@RequestHeader(name = "Accept", required = false) String acceptHeader) {
+
+        if (studentValidator.headerValidator(acceptHeader).equals("Bad Request")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad Request");
+        }
+        if (studentValidator.headerValidator(acceptHeader).equals("ok")) {
+
+            try {
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .header("Content-Type", "application/json")
+                        .body(saveStudent.getStudentSaved());
+
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+        }
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+
+
     }
 }

@@ -23,4 +23,15 @@ public class StudentValidator {
         }
         return "ok";
     }
+
+    public String headerValidator(String acceptHeader) {
+        if (acceptHeader.equals("*/*")) {
+            return "Bad Request";
+        }
+        if (acceptHeader.equalsIgnoreCase("application/json") ||
+                acceptHeader.equalsIgnoreCase("text/plain")) {
+            return "ok";
+        }
+        return "Accept header is invalid";
+    }
 }
